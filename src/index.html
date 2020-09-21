@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Zip Web</title>
+    <meta name="description" content="Zip file creation service on Web" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI",
+          sans-serif;
+        font-size: 24px;
+        color: #666;
+        background: #eee;
+      }
+      body {
+        display: grid;
+        place-content: center;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      h1 {
+        font-size: 64px;
+        margin: 0 auto 0.5em;
+      }
+      p {
+        margin: 0 auto 3em;
+      }
+      .detail {
+        font-size: smaller;
+      }
+      button {
+        appearance: none;
+        border: 0;
+        margin: 0 auto 64px;
+        width: 300px;
+        height: 300px;
+        border-radius: 150px;
+        font-size: 24px;
+        color: #666;
+        background: transparent;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+        outline: 0;
+        border: solid 2px transparent;
+      }
+      button:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+          0 6px 6px rgba(0, 0, 0, 0.23);
+      }
+      button:focus {
+        border-color: #339;
+      }
+      #processing {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #processing > * + * {
+        margin-left: 16px;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .loading {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 24px;
+        height: 24px;
+        border-radius: 100%;
+        border: 2px solid gray;
+        border-bottom-color: transparent;
+        animation: rotate 1s linear 0s infinite;
+      }
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      if ("serviceWorker" in navigator)
+        window.addEventListener("load", () =>
+          navigator.serviceWorker.register("/service-worker.js")
+        );
+    </script>
+    <script
+      src="https://unpkg.com/pwacompat@2.0.17"
+      integrity="sha384-Rli908ex+eSk6Xo0v7OWhTha8ooKKFI2XDTQMLlU3yp5VrrY3+K6DmULV2FWtYbM"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </head>
+  <body>
+    <h1>📁 Zip Web</h1>
+    <p>Zip file creation service on Web <a href="https://github.com/KoharaKazuya/zipweb/blob/master/README.md" class="detail">(service detail)</a></p>
+    <button type="button" autofocus>Select a directory</button>
+    <div id="processing" class="hidden">
+      <span class="loading"></span>
+      <span>Creating Zip file <span id="progress"></span></span>
+    </div>
+  </body>
+</html>
