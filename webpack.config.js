@@ -4,7 +4,12 @@ const HTMLPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GenerateSW } = require("workbox-webpack-plugin");
 
+/** @type import('webpack').Configuration */
 module.exports = {
+  output: {
+    path: path.join(process.cwd(), "dist"),
+  },
+
   plugins: [
     new CleanWebpackPlugin(),
     new HTMLPlugin({
