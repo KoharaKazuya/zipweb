@@ -28,6 +28,6 @@ export function deflateFallback(data) {
       }
     });
 
-    deflateStream.push(data, true);
+    deflateStream.push(new Uint8Array(data), true);
   });
 }
