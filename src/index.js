@@ -1,14 +1,17 @@
+import {
+  hideProcessing,
+  onButtonClick,
+  showProcessing,
+  updateProgress,
+} from "./dom.js";
 import { directoryOpen, fileSave } from "./filesystem.js";
 import { ZipBuilder } from "./zip.js";
 
 const ignoreFileNamePatterns = [/^Thumbs\.db$/, /\.DS_Store$/];
 
-const button = document.querySelector("button");
-const processing = document.querySelector("#processing");
-const progress = document.querySelector("#progress");
 let running = false;
 
-button.addEventListener("click", () => {
+onButtonClick(() => {
   if (running) return;
 
   (async () => {
@@ -19,8 +22,7 @@ button.addEventListener("click", () => {
     }
 
     running = true;
-    button.classList.add("hidden");
-    processing.classList.remove("hidden");
+    showProcessing();
 
     const builder = new ZipBuilder();
     for (const file of files) {
@@ -29,7 +31,9 @@ button.addEventListener("click", () => {
     }
 
     (function renderProgress() {
-      progress.textContent = `${builder.progress.compressedEntries} / ${builder.entries.length}`;
+      updateProgress(
+        `${builder.progress.compressedEntries} / ${builder.entries.length}`
+      );
       if (running) requestAnimationFrame(renderProgress);
     })();
 
@@ -39,8 +43,7 @@ button.addEventListener("click", () => {
     await fileSave(content, { fileName: `${dirname}.zip` });
   })().finally(() => {
     running = false;
-    button.classList.remove("hidden");
-    processing.classList.add("hidden");
+    hideProcessing();
   });
 });
 
