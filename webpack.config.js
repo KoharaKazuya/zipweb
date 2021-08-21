@@ -6,6 +6,8 @@ const { GenerateSW } = require("workbox-webpack-plugin");
 
 /** @type import('webpack').Configuration */
 module.exports = {
+  mode: "development",
+
   output: {
     path: path.join(process.cwd(), "dist"),
   },
@@ -20,8 +22,4 @@ module.exports = {
     }),
     new GenerateSW(),
   ],
-
-  devServer: {
-    contentBase: path.join(__dirname, "public"),
-  },
 };
