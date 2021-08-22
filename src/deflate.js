@@ -4,9 +4,8 @@
  */
 export async function deflate(data) {
   if (!("CompressionStream" in window)) {
-    const { default: pako } = await import("pako");
-    const output = pako.deflate(data);
-    return output.slice(2, -4);
+    const { deflateFallback } = await import("./deflate-fallback");
+    return await deflateFallback(data);
   }
   return await compressArrayBuffer(data);
 }

@@ -1,26 +1,47 @@
+import {
+  hideProcessing,
+  onButtonClick,
+  onDrop,
+  showProcessing,
+  updateProgress,
+} from "./dom.js";
 import { directoryOpen, fileSave } from "./filesystem.js";
 import { ZipBuilder } from "./zip.js";
 
 const ignoreFileNamePatterns = [/^Thumbs\.db$/, /\.DS_Store$/];
 
-const button = document.querySelector("button");
-const processing = document.querySelector("#processing");
-const progress = document.querySelector("#progress");
 let running = false;
 
-button.addEventListener("click", () => {
-  if (running) return;
+const throwable =
+  (f) =>
+  (...args) =>
+    f(...args).catch((err) => {
+      console.error(err);
+      alert(err);
+    });
 
-  (async () => {
+onDrop(
+  throwable(async (files) => {
+    await createZip(files);
+  })
+);
+
+onButtonClick(
+  throwable(async () => {
     const files = await directoryOpen({ recursive: true });
-    if (files.length === 0) {
-      alert("cannot create zip for zero file");
-      return;
-    }
+    await createZip(files);
+  })
+);
 
-    running = true;
-    button.classList.add("hidden");
-    processing.classList.remove("hidden");
+/**
+ * @param {File[]} files
+ */
+async function createZip(files) {
+  if (running) throw new Error("cannot create while creating another");
+  running = true;
+  showProcessing();
+  try {
+    if (files.length === 0) throw new Error("cannot create zip for zero file");
 
     const builder = new ZipBuilder();
     for (const file of files) {
@@ -29,7 +50,9 @@ button.addEventListener("click", () => {
     }
 
     (function renderProgress() {
-      progress.textContent = `${builder.progress.compressedEntries} / ${builder.entries.length}`;
+      updateProgress(
+        `${builder.progress.compressedEntries} / ${builder.entries.length}`
+      );
       if (running) requestAnimationFrame(renderProgress);
     })();
 
@@ -37,12 +60,11 @@ button.addEventListener("click", () => {
     const content = await builder.build();
 
     await fileSave(content, { fileName: `${dirname}.zip` });
-  })().finally(() => {
+  } finally {
     running = false;
-    button.classList.remove("hidden");
-    processing.classList.add("hidden");
-  });
-});
+    hideProcessing();
+  }
+}
 
 /**
  * @param {File} file
