@@ -1,6 +1,7 @@
 import {
   hideProcessing,
   onButtonClick,
+  onDrop,
   showProcessing,
   updateProgress,
 } from "./dom.js";
@@ -11,18 +12,36 @@ const ignoreFileNamePatterns = [/^Thumbs\.db$/, /\.DS_Store$/];
 
 let running = false;
 
-onButtonClick(() => {
-  if (running) return;
+const throwable =
+  (f) =>
+  (...args) =>
+    f(...args).catch((err) => {
+      console.error(err);
+      alert(err);
+    });
 
-  (async () => {
+onDrop(
+  throwable(async (files) => {
+    await createZip(files);
+  })
+);
+
+onButtonClick(
+  throwable(async () => {
     const files = await directoryOpen({ recursive: true });
-    if (files.length === 0) {
-      alert("cannot create zip for zero file");
-      return;
-    }
+    await createZip(files);
+  })
+);
 
-    running = true;
-    showProcessing();
+/**
+ * @param {File[]} files
+ */
+async function createZip(files) {
+  if (running) throw new Error("cannot create while creating another");
+  running = true;
+  showProcessing();
+  try {
+    if (files.length === 0) throw new Error("cannot create zip for zero file");
 
     const builder = new ZipBuilder();
     for (const file of files) {
@@ -41,11 +60,11 @@ onButtonClick(() => {
     const content = await builder.build();
 
     await fileSave(content, { fileName: `${dirname}.zip` });
-  })().finally(() => {
+  } finally {
     running = false;
     hideProcessing();
-  });
-});
+  }
+}
 
 /**
  * @param {File} file

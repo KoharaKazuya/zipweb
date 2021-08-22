@@ -16,13 +16,14 @@
       html {
         font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI",
           sans-serif;
-        font-size: 24px;
-        color: #666;
+        font-size: 20px;
+        color: #333;
         background: #eee;
       }
       body {
-        display: grid;
-        place-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
       html,
       body {
@@ -30,39 +31,28 @@
         margin: 0;
       }
       h1 {
-        font-size: 64px;
-        margin: 0 auto 0.5em;
+        margin: 0.5em auto 1em;
+      }
+      p,
+      .dropzone {
+        width: 80%;
+        max-width: 640px;
       }
       p {
-        margin: 0 auto 3em;
-      }
-      .detail {
+        margin: 0 auto;
+        color: #666;
         font-size: smaller;
       }
-      button {
-        appearance: none;
-        border: 0;
-        margin: 0 auto 64px;
-        width: 300px;
-        height: 300px;
-        border-radius: 150px;
-        font-size: 24px;
-        color: #666;
-        background: transparent;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        cursor: pointer;
-        outline: 0;
-        border: solid 2px transparent;
-      }
-      button:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
-          0 6px 6px rgba(0, 0, 0, 0.23);
-      }
-      button:focus {
-        border-color: #339;
+      .dropzone {
+        background: none;
+        height: 400px;
+        margin: 3em auto;
+        border: dashed 1px;
+        border-radius: 4px;
+        font-size: 100%;
       }
       #processing {
+        height: 400px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -110,8 +100,16 @@
   </head>
   <body>
     <h1>📁 Zip Web</h1>
-    <p>Zip file creation service on Web <a href="https://github.com/KoharaKazuya/zipweb/blob/master/README.md" class="detail">(service detail)</a></p>
-    <button type="button" autofocus>Select a directory</button>
+    <p>
+      A zip file creation service on web. Creates zip files and avoids well
+      known issues on Windows and macOS.
+      <a href="https://github.com/KoharaKazuya/zipweb/blob/master/README.md"
+        >(service detail)</a
+      >
+    </p>
+    <button type="button" autofocus class="dropzone">
+      Drop files here or click to select directory
+    </button>
     <div id="processing" class="hidden">
       <span class="loading"></span>
       <span>Creating Zip file <span id="progress"></span></span>
