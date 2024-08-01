@@ -6,7 +6,6 @@
     <title>Zip Web</title>
     <meta name="description" content="Zip file creation service on Web" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="manifest" href="/manifest.webmanifest" />
     <style>
       *,
       *::before,
@@ -85,18 +84,7 @@
         }
       }
     </style>
-    <script>
-      if ("serviceWorker" in navigator)
-        window.addEventListener("load", () =>
-          navigator.serviceWorker.register("/service-worker.js")
-        );
-    </script>
-    <script
-      src="https://unpkg.com/pwacompat@2.0.17"
-      integrity="sha384-Rli908ex+eSk6Xo0v7OWhTha8ooKKFI2XDTQMLlU3yp5VrrY3+K6DmULV2FWtYbM"
-      crossorigin="anonymous"
-      async
-    ></script>
+    <script type="module" src="./src/index.js"></script>
   </head>
   <body>
     <h1>📁 Zip Web</h1>
