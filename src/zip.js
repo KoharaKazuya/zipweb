@@ -88,9 +88,9 @@ export class ZipBuilder {
       // compression method
       writer.uint16(8); // The file is Deflated
       // last mod file time
-      writer.uint16(0);
+      writer.uint16(0); // 00:00
       // last mod file date
-      writer.uint16(0);
+      writer.uint16(0b0000000000100001); // 1980/1/1
       // crc-32
       writer.uint32(i.crc32);
       // compressed size
@@ -129,9 +129,9 @@ export class ZipBuilder {
       // compression method
       writer.uint16(8); // The file is Deflated
       // last mod file time
-      writer.uint16(0);
+      writer.uint16(0); // 00:00
       // last mod file date
-      writer.uint16(0);
+      writer.uint16(0b0000000000100001); // 1980/1/1
       // crc-32
       writer.uint32(i.crc32);
       // compressed size
